@@ -12,7 +12,7 @@ public class Fourth {
         printArray(array);
         int maxValue = getMaxValueInArray(array);
         System.out.println("Array without rows and columns with maximum element ");
-        printArray(deleteRowsAndColumnsWithMaximum(array, maxValue));                                                      // new print
+        printArray(deleteRowsAndColumnsWithMaximum(array, maxValue));                                                     
 
     }
 
