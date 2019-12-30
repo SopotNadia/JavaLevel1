@@ -49,6 +49,8 @@ public class Runner {
             System.out.println(e.getMessage());
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
+        }catch (NullPointerException e){
+            System.out.println(e.getMessage());
         }
 
         System.out.println("Enter faculty, in with you want to get average mark of subject (ief, ksis, fkp) ");
