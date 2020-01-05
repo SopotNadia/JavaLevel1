@@ -1,0 +1,21 @@
+package Threads.Optional;
+
+import java.util.Stack;
+
+public class Airport {
+    String airportName;
+    Stack<Integer> listLines = new Stack();
+
+    public Airport(String airportName) {
+        this.airportName = airportName;
+    }
+
+    public void addIntoStack(Integer value){
+        listLines.push(value);
+    }
+
+    public Stack<Integer> getListLines() {
+        return listLines;
+    }
+
+}
