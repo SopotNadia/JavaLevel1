@@ -3,8 +3,8 @@ package Threads.Optional;
 import java.util.Stack;
 
 public class Airport {
-    String airportName;
-    Stack<Integer> listLines = new Stack();
+    private String airportName;
+    private Stack<Integer> listLines = new Stack();
 
     public Airport(String airportName) {
         this.airportName = airportName;

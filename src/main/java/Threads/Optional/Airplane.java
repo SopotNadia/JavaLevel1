@@ -5,11 +5,11 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Airplane extends Thread {
-    Semaphore semaphore;
-    Stack<Integer> commonResource;
-    ReentrantLock locker;
-    Integer line;
-    int amountFlights = 0;
+    private Semaphore semaphore;
+    private Stack<Integer> commonResource;
+    private ReentrantLock locker;
+    private Integer line;
+    private int amountFlights = 0;
 
     public Airplane(Semaphore semaphore, ReentrantLock locker, Stack commonResource) {
         this.semaphore = semaphore;
