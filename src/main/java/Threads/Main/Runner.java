@@ -5,17 +5,25 @@ public class Runner {
         //Автостоянка. Доступно несколько машиномест. На одном месте может находиться только один автомобиль.
         // Если все места заняты, то автомобиль не станет ждать больше определенного времени и уедет на другую стоянку.
 
-        Parking parking = new Parking(5);
+        Parking parking = new Parking(1);
         parking.addCarIntoQueue(new Car("Volvo"));
-        parking.addCarIntoQueue(new Car("Kea"));
-        parking.addCarIntoQueue(new Car("BMV"));
-        parking.addCarIntoQueue(new Car("Ford"));
-        parking.addCarIntoQueue(new Car("Lada"));
-        parking.addCarIntoQueue(new Car("Mazda"));
+        parking.addCarIntoQueue(new Car ("Kia"));
+        parking.addCarIntoQueue(new Car ("BMV"));
+        parking.addCarIntoQueue(new Car ("Ford"));
+        parking.addCarIntoQueue(new Car ("Mazda"));
+        parking.addCarIntoQueue(new Car ("Ferrari"));
+        parking.addCarIntoQueue(new Car ("Opel"));
 
         while(!parking.getCarsQueue().isEmpty()){
-            Car car = parking.getCarsQueue().poll();
-            new Thread(() -> car.tryToPark(parking)).start();
+            new Thread(() -> {
+                Car car = parking.getCarsQueue().poll();
+                car.tryToPark(parking);
+            }).start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

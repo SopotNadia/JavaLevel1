@@ -1,45 +1,43 @@
 package Threads.Main;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Car {
     private String marka;
-
-    private ReentrantLock locker = new ReentrantLock(true);
-    private Condition condition = locker.newCondition();
+    private static ReentrantLock locker = new ReentrantLock();
+    private static Condition condition = locker.newCondition();
 
     public Car(String marka) {
         this.marka = marka;
     }
 
     public void tryToPark(Parking parking) {
-        locker.lock();
         while(parking.getAvailablePlaces() == 0){
-            try {
-                condition.await();
-                System.out.println("after await");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(locker.tryLock()){
+                try {
+                    if(!condition.await(5, TimeUnit.SECONDS)){
+                        //если время истекло - заходит
+                        System.out.println(marka + " can't wait more. Car's leaving the queue");
+                        return;
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    locker.unlock();
+                }
             }
-//            try {
-//                if (!condition.await(10, TimeUnit.SECONDS)){
-//                    //если время истекло - заходит
-//                    System.out.println(marka + " can't wait more. Car's leaving the queue ");
-//                    return;
-//                }else{
-//                    System.out.println();
-//                }
-//            } catch (InterruptedException e) {
-//                //e.printStackTrace();
-//            }
         }
-
         try {
-            parking.decreaseAvailablePlaces();
-            System.out.println(marka + " is parking");
-            //new Thread(() ->
-
+            locker.lock();
+            if(parking.getAvailablePlaces() > 0){
+                parking.decreaseAvailablePlaces();
+                System.out.println(marka + " is parking");
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             locker.unlock();
         }
@@ -47,17 +45,23 @@ public class Car {
     }
 
     public void leaveParking(Parking parking){
-
         try {
-            Thread.sleep((long) (4000 + (Math.random()*2000)));
+            Thread.sleep((long)(4000 + Math.random()*2000));
+            locker.lock();
+            System.out.println(marka + " is leaving the parking");
+            parking.increaseAvailablePlases();
         } catch (InterruptedException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
+        } finally {
+            condition.signalAll();
+            locker.unlock();
         }
-        locker.lock();
-        System.out.println(marka + " leaving the parking");
-        parking.increaseAvailablePlases();
-        condition.signalAll();
-        //System.out.println("out locker");
-        locker.unlock();
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "marka='" + marka + '\'' +
+                '}';
     }
 }
